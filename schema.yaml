@@ -1,0 +1,107 @@
+description: "Schema for the configuration file"
+type: object
+properties:
+  vsphere:
+    type: object
+    properties:
+      user:
+        type: string
+      password:
+        type: string
+      port_group_name:
+        type: string
+      template:
+        type: object
+        properties:
+          source:
+            type: string
+          destination:
+            type: string
+          name:
+            type: string
+      domain:
+        type: string
+    required:
+      - user
+      - password
+      - port_group_name
+      - template
+      - domain
+
+  vm_specifications:
+    type: object
+    properties:
+      master:
+        type: object
+        properties:
+          cpu_nums:
+            type: integer
+          memory_mib:
+            type: integer
+          name_prefix:
+            type: string
+      worker:
+        type: object
+        properties:
+          cpu_nums:
+            type: integer
+          memory_mib:
+            type: integer
+          name_prefix:
+            type: string
+
+  network:
+    type: object
+    properties:
+      ipv4_gateway:
+        type: string
+        minLength: 1
+      ipv4_subnet_mask:
+        type: integer
+        minimum: 1
+        maximum: 32
+      dns_server_list:
+        type: string
+        minLength: 1
+
+  deployment:
+    type: object
+    properties:
+      type:
+        type: string
+        enum: [ 'minimal', 'resilient', 'scale' ]
+    required:
+      - type
+
+  zones:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        vsphere_server:
+          type: string
+          minLength: 1
+        esxi_host:
+          type: string
+          minLength: 1
+        datacenter:
+          type: string
+          minLength: 1
+        datastore:
+          type: string
+          minLength: 1
+        vms:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              ipv4_address:
+                type: string
+        resource_pools:
+          type: array
+          items:
+            type: string
