@@ -566,7 +566,7 @@ if __name__ == '__main__':
             disk1 = "\n".join([str(x) for x in disk])
 
         print("\n Checking resources for master/s node/s for zone " + name + " \n")
-        import check_resources_vsphere as check_vsphere
+        import check_source_resources as check_vsphere
 
         for resource_pool in resource_pools:
             ret_val = check_vsphere.main_function(user=vsphere_user, password=vsphere_password,
