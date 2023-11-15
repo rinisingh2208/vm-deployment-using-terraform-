@@ -1,0 +1,58 @@
+vsphere:
+  user: administrator
+  password: root123
+  port_group_name: mgmtvlan-5
+  template:
+    source: /tmp/centos.ova
+    destination: /
+    name: centos_Testing_vm_deployment_template
+    cpu_nums: 4
+    memory_mib: 8192
+    disk_size_gib: 300
+  domain: test.com
+  tfstate:
+    tfstate_file_path: /tmp/
+    workspace_name: test1
+
+# name prefix for the VMs
+vm_specifications:
+  master:
+    cpu_nums: 4
+    memory_mib: 32768
+    name_prefix: master
+    disk_size_gib: 300
+  worker:
+    cpu_nums: 4
+    memory_mib: 32768
+    name_prefix: worker
+    disk_size_gib: 300
+
+network:
+  ipv4_gateway: 198.14.16.1
+  ipv4_subnet_mask: 21
+  dns_server_list: 198.14.100.5
+
+# deployment type: minimal, resilient, scale
+deployment_type: resilient
+
+# zone specific configuration.
+# if deployment_type is minimal, only one zone is required
+# if deployment_type is resilient, minimum 2 and maximum 3 zones are required
+# if deployment_type is scale, 3 zones are required
+zones:
+  - name: dc-1
+    vsphere_server: 172.16.1.109
+    esxi_host: 172.16.5.134
+    datacenter: Mumbai
+    datastore: raid0
+    vms:
+      - name: master-1
+        ipv4_address: 198.14.22.31
+      - name: worker-1
+        ipv4_address: 198.14.22.32
+      - name: master-2
+        ipv4_address: 198.14.22.34
+      - name: master-3
+        ipv4_address: 198.14.22.34
+    resource_pools:
+      - test-121
