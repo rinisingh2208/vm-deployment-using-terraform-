@@ -1,0 +1,83 @@
+##########################################################################################################################################################
+
+This file explains all fields in config.yaml
+
+###########################################################################################################################################################
+
+1. vsphere
+    This section contains information related to the vSphere environment, including the vSphere user credentials, the port group name for the VM network, the template for VM deployment, and the domain name.
+
+    user: The username for accessing the vSphere environment.
+    password: The password for accessing the vSphere environment.
+    port_group_name: The name of the port group in the vSphere environment that is used for the VM network.
+    template: The details of the VM template that will be used to deploy new VMs. It includes the source file path for the OVA template, the destination folder path for the deployed VM, and the name to be given to the deployed VM.
+    domain: The domain name for the VMs.
+
+2. vm_specifications
+    This section contains the specifications for the VMs that will be deployed, including the number of CPUs, amount of memory, and name prefix.
+
+    master: The specifications for the master VMs. It includes the number of CPUs, amount of memory in MiB, and a name prefix to be used for the VMs.
+    worker: The specifications for the worker VMs. It includes the number of CPUs, amount of memory in MiB, and a name prefix to be used for the VMs.
+
+3. network
+    This section contains information related to the network configuration for the VMs, including the IPv4 gateway, subnet mask, and DNS server list.
+
+    ipv4_gateway: The IPv4 gateway address for the VMs.
+    ipv4_subnet_mask: The IPv4 subnet mask for the VMs.
+    dns_server_list: The list of DNS server addresses for the VMs.
+
+4. deployment_type
+    This field specifies the type of deployment to be performed, which can be one of three types: minimal, resilient, or scale.
+
+    deployment_type: The type of deployment to be performed, which can be one of the following values:
+    minimal: A single zone deployment with minimum resources.
+    resilient: A multi-zone deployment with fault tolerance.
+    scale: A multi-zone deployment for scaling.
+
+5. zones
+    This section contains details for each zone that will be deployed as part of the vSphere environment. Each zone includes details about the vSphere server, ESXi host, datacenter, datastore, VMs to be deployed in the zone, and the resource pools to be used.
+
+    name: The name of the zone.
+    vsphere_server: The IP address or hostname of the vSphere server.
+    esxi_host: The IP address of the ESXi host.
+    datacenter: The name of the datacenter to be used.
+    datastore: The name of the datastore to be used for the VMs.
+    vms: A list of VMs to be deployed in the zone. Each VM includes a name and an IPv4 address.
+    resource_pools: A list of resource pools to be used for the VMs.
+   Note:# zone specific configuration.
+        # if deployment_type is minimal, only one zone is required
+        # if deployment_type is resilient, minimum 2 and maximum 3 zones are required
+        # if deployment_type is scale, 3 zones are required
+
+
+
+
+
+######################################################################################################################################################################################
+
+       Steps to destroy resources within workspace
+
+####################################################################################################################################################################################
+
+1) Be on workspace directory path :
+eg: if your     tfstate_file_path: /home/ubuntu/
+    workspace_name: test1
+ you need to be in directory cd /home/ubuntu/test1
+ 2) Now move to the zone's workspace
+ eg: my zone's workspace is names as dc-1, dc-2
+   cd dc-1
+ 3) Run command  to select the workspace: terraform workspace select dc-1
+ 4) Now run: terraform destroy
+
+ Note: In case of workspaces not being present due to some code or filesystem issue but you can see your workspace directories and tfstate and main.tf file, follow below steps to destroy
+       resources
+       1) Be on workspace directory path :
+       eg: if your     tfstate_file_path: /home/ubuntu/
+           workspace_name: test1
+           you need to be in directory cd /home/ubuntu/test1
+       2) Now move to the zone's workspace
+       eg: my zone's workspace is names as dc-1, dc-2
+           cd dc-1
+       3) run command to initialize state file: terraform init -reconfigure
+       4) now copy terraform.tfstate.backup to terraform.tfstate using command: cp terraform.tfstate.backup terraform.tfstate
+       5) now run command to destroy resources: terraform destroy
